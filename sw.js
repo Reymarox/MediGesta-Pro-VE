@@ -1,4 +1,4 @@
-const CACHE_NAME = 'medigesta-ve-v3.2'; // Versión incrementada
+const CACHE_NAME = 'medigesta-ve-v3.3'; // Versión incrementada
 
 // Archivos que se almacenarán en caché para funcionamiento offline
 const urlsToCache = [
