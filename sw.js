@@ -1,41 +1,32 @@
-const CACHE_NAME = 'medigesta-ve-v3.3'; // Versión incrementada
+const CACHE_NAME = 'medigesta-ve-v3.4'; // Versión incrementada para forzar actualización
 
-// Archivos que se almacenarán en caché para funcionamiento offline
 const urlsToCache = [
   './index.html',
-  './manifest.json',
-  './icons/icon-192.png',   // Añadir iconos
-  './icons/icon-512.png'
+  './manifest.json'
+  // No incluimos iconos porque están incrustados en el manifest
 ];
 
-// Instalación: guardar recursos en caché
+// Instalación
 self.addEventListener('install', event => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(urlsToCache);
-    })
+    caches.open(CACHE_NAME).then(cache => cache.addAll(urlsToCache))
   );
   self.skipWaiting();
 });
 
-// Activación: limpiar cachés antiguas
+// Activación
 self.addEventListener('activate', event => {
   event.waitUntil(
-    caches.keys().then(keys => {
-      return Promise.all(
-        keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
-      );
-    })
+    caches.keys().then(keys => Promise.all(
+      keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))
+    ))
   );
   self.clients.claim();
 });
 
-// Estrategia de red: Cache First, luego red
+// Cache First con Network Fallback
 self.addEventListener('fetch', event => {
   event.respondWith(
-    caches.match(event.request).then(cachedResponse => {
-      // Devuelve de caché si existe; si no, va a la red
-      return cachedResponse || fetch(event.request);
-    })
+    caches.match(event.request).then(cached => cached || fetch(event.request))
   );
 });
