@@ -393,7 +393,12 @@
     </div>
 
     <script>
-
+            (function() {
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('./sw.js').catch(console.log);
+                });
+            }
             // Tema
             const themeToggle = document.getElementById('themeToggle');
             const body = document.body;
@@ -9751,16 +9756,6 @@
             document.readyState === 'loading' ? document.addEventListener('DOMContentLoaded', init) : init();
         })();
     </script>
-    <script>
-  if ('serviceWorker' in navigator) {
-    window.addEventListener('load', function() {
-      navigator.serviceWorker.register('./sw.js').then(function(registration) {
-        console.log('SW registrado con éxito:', registration.scope);
-      }, function(err) {
-        console.log('Error al registrar SW:', err);
-      });
-    });
-  }
-</script>
+    
 </body>
 </html>
